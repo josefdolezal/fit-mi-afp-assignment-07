@@ -6,7 +6,7 @@ Homework to practice Monoid, Functor, Applicative, and Monad
 
 In this homework you will have two tasks that include use of newly learned typeclasses.
 
-1. *Data.SortedList* = implement all necessary functions to make data type `SortedList` to be an instance of `Semigroup`, `Monoid`, `Functor`, `Applicative`, `Monad`. After appling the resulting list must be always sorted. It is **forbidden** to just delegate to list and use `fromList` and `toList`.
+1. *Data.SortedList* = implement all necessary functions to make data type `SortedList` to be an instance of `Semigroup`, `Monoid`, `Functor`, `Applicative`, `Monad`. After applying `(<>)` the resulting list must be sorted. Sadly, `Functor`, `Applicative`, and `Monad` won't allow you to use `Ord` constaint so the result won't be sorted. Implement some sort function if you want to... It is **forbidden** to just delegate to list and use `fromList` and `toList`. 
 2. *Calculator* = this task is more *free* (in terms of creativity). You have to write a simple CLI calculator with given specification. Try to run `stack exec calculator` and/or see the specs. There are lots of different errors so you should use `Either` monad to the maximum. Consider also about using `<$>` and `<*>`... The implementation should be as simple as possible by using those (no painful nesting of `case-of`). Tests work just with `calculate` function so it is up to you what other functions will you use. You are also required to implement simple CLI interface (show help or calculate per line).
 
 If it was too easy for you, please read some additional materials on Monads and try to devise some extension of *Calculator* on your own (memory, composition, infix operators, etc.).
