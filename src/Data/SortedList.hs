@@ -33,8 +33,12 @@ merge l@(x :<$ xs) r@(y :<$ys) = case (x < y) of
     True -> x :<$ (merge xs r)
     _    -> y :<$ (merge l ys)
 
+slconcat :: SortedList a -> SortedList a -> SortedList a
+slconcat Nil r        = r
+slconcat l Nil        = l
+slconcat (l :<$ ls) r = l :<$ (ls `slconcat` r)
+
 instance Ord a => Semigroup (SortedList a) where
-    -- | Merge two sorted lists
     (<>) = merge
 
 instance Ord a => Monoid (SortedList a) where
@@ -42,14 +46,14 @@ instance Ord a => Monoid (SortedList a) where
     mappend = (<>)
 
 instance Functor SortedList where
-  -- | Apply function over sorted list
-  fmap = undefined
+    fmap _ Nil        = Nil
+    fmap f (x :<$ xs) = (f x) :<$ (fmap f xs)
 
 instance Applicative SortedList where
-  pure  = undefined
-  -- | Apply all functions to elements in sorted list
-  (<*>) = undefined
+    pure  = (:<$ Nil)
+    (<*>) Nil _         = Nil
+    (<*>) (f :<$ fs) xs = fmap f xs `slconcat` (fs <*> xs)
 
 instance Monad SortedList where
-  -- | Apply on sorted list if valid and not empty
-  (>>=)  = undefined
+    (>>=) Nil _        = Nil
+    (>>=) (x :<$ xs) f = f x `slconcat` (xs >>= f)
