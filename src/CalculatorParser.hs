@@ -71,7 +71,22 @@ parens :: GenParser Char st a -> GenParser Char st a
 parens = between (char '(') (char ')')
 
 number :: GenParser Char st Double
-number = do { digits <- many1 digit; return (read digits :: Double) }
+number = try
+    decimal <|>
+    int
+
+decimal :: GenParser Char st Double
+decimal = do
+    w <- digits
+    char '.'
+    d <- digits
+    return (read (w ++ "." ++ d) :: Double)
+
+int :: GenParser Char st Double
+int = do { d <- digits; return (read d :: Double) }
+
+digits :: GenParser Char st String
+digits = many1 digit
 
 constant :: GenParser Char st Double
 constant = constPi
