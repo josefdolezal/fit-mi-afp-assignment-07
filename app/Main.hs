@@ -1,6 +1,6 @@
 module Main where
 
-import Calculator (calculator)
+import CalculatorCLI (calculator)
 
 main :: IO ()
 main = calculator
