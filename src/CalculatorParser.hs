@@ -57,8 +57,15 @@ expr = try
     number
 
 neg :: GenParser Char st Double -> GenParser Char st Double
-neg pars = parens inner
-    where inner = do { char '-'; (*(-1)) <$> pars }
+neg ex = try
+    (parensNeg ex) <|>
+    (plainNeg ex)
+
+parensNeg :: GenParser Char st Double -> GenParser Char st Double
+parensNeg ex = parens $ plainNeg ex
+
+plainNeg :: GenParser Char st Double -> GenParser Char st Double
+plainNeg ex = do { char '-'; (*(-1)) <$> ex }
 
 parens :: GenParser Char st a -> GenParser Char st a
 parens = between (char '(') (char ')')
