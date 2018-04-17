@@ -26,35 +26,46 @@ calculate "" = Left e12
 calculate i = parseOperation i >>= process
 
 process :: Operation -> Calculation
-process (Unary u)  = Right $ processUnary u
-process (Binary b) = Right $ processBinary b
+process (Unary u)  = processUnary u
+process (Binary b) = processBinary b
 
-processUnary :: UnaryOperation -> Double
+processUnary :: UnaryOperation -> Calculation
 processUnary (SQRT a) = safeSqrt a
-processUnary (SIN a)  = sin a
-processUnary (COS a)  = cos a
 processUnary (ULOG a) = safeLog 10 a
+processUnary (SIN a)  = Right $ sin a
+processUnary (COS a)  = Right $ cos a
 
-processBinary :: BinaryOperation -> Double
-processBinary (ADD l r)    = l + r
-processBinary (SUB l r)    = l - r
-processBinary (MUL l r)    = l * r
+processBinary :: BinaryOperation -> Calculation
+processBinary (ADD l r)    = Right $ l + r
+processBinary (SUB l r)    = Right $ l - r
+processBinary (MUL l r)    = Right $ l * r
 processBinary (DIV l r)    = safeDiv l r
 processBinary (GCD l r)    = safeGCD l r
 processBinary (POW l r)    = safePow l r
 processBinary (BINLOG l r) = safeLog l r
 
-safeSqrt :: Double -> Double
-safeSqrt a = 0 --fixme
+safeSqrt :: Double -> Calculation
+safeSqrt x
+    | x >= 0    = Right $ sqrt x
+    | otherwise = Left e11
 
-safeDiv :: Double -> Double -> Double
-safeDiv l r = 0 --fixme
+safeDiv :: Double -> Double -> Calculation
+safeDiv l r
+    | r /= 0    = Right $ l / r
+    | otherwise = Left e4
 
-safeGCD :: Double -> Double -> Double
-safeGCD l r = 0 --fixme
+safeGCD :: Double -> Double -> Calculation
+safeGCD l r
+    | l < 0 || r < 0 = Left e6
+    | l > r          = Right $ fromIntegral $ gcd (round l) (round r)
+    | otherwise      = Left e5
 
-safePow :: Double -> Double -> Double
-safePow l r = 0 --fixme
+safePow :: Double -> Double -> Calculation
+safePow 0 0 = Left e7
+safePow l r = Right $ l**r
 
-safeLog :: Double -> Double -> Double
-safeLog l r = logBase l r
+safeLog :: Double -> Double -> Calculation
+safeLog 0 0 = Left e8
+safeLog 0 _ = Left e9
+safeLog _ 0 = Left e10
+safeLog l r = Right $ logBase l r
