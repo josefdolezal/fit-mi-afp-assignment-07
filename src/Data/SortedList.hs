@@ -24,16 +24,22 @@ fromList = foldr (:<$) Nil . sort
 -- DO NOT CHANGE THIS
 smallest :: Ord a => SortedList a -> a
 smallest (x :<$ _) = x
-smallest _ = error "SortedList: Nil"
+smallest _         = error "SortedList: Nil"
+
+merge :: Ord a => SortedList a -> SortedList a -> SortedList a
+merge Nil r                    = r
+merge l Nil                    = l
+merge l@(x :<$ xs) r@(y :<$ys) = case (x < y) of
+    True -> x :<$ (merge xs r)
+    _    -> y :<$ (merge l ys)
 
 instance Ord a => Semigroup (SortedList a) where
-  -- | Merge two sorted lists
-  -- DO NOT USE Data.List and its sort! it should be O(n+m) complexity
-  (<>) = undefined
+    -- | Merge two sorted lists
+    (<>) = merge
 
 instance Ord a => Monoid (SortedList a) where
-  mempty = undefined
-  mappend = (<>)
+    mempty = Nil
+    mappend = (<>)
 
 instance Functor SortedList where
   -- | Apply function over sorted list
