@@ -1,8 +1,13 @@
-module CalculatorParser (operation) where
+module CalculatorParser (parseOperation) where
 
 import Text.ParserCombinators.Parsec
 
 import CalculatorModel
+
+parseOperation :: String -> Either String Operation
+parseOperation s = case (parse operation "Error" s) of
+    Left _ -> Left "Error"
+    Right a -> Right a
 
 operation :: GenParser Char st Operation
 operation = try

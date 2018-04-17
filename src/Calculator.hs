@@ -1,9 +1,7 @@
 module Calculator (calculate) where
 
 import CalculatorModel
-
-process :: Operation -> Calculation
-process = undefined
+import CalculatorParser
 
 -- Use monads, and functors and/or applicative to make the code simple!
 
@@ -24,4 +22,39 @@ e12  = "No input"
 
 -- | Function do to the calculation
 calculate :: String -> Calculation
-calculate = undefined
+calculate "" = Left e12
+calculate i = parseOperation i >>= process
+
+process :: Operation -> Calculation
+process (Unary u)  = Right $ processUnary u
+process (Binary b) = Right $ processBinary b
+
+processUnary :: UnaryOperation -> Double
+processUnary (SQRT a) = safeSqrt a
+processUnary (SIN a)  = sin a
+processUnary (COS a)  = cos a
+processUnary (ULOG a) = safeLog 10 a
+
+processBinary :: BinaryOperation -> Double
+processBinary (ADD l r)    = l + r
+processBinary (SUB l r)    = l - r
+processBinary (MUL l r)    = l * r
+processBinary (DIV l r)    = safeDiv l r
+processBinary (GCD l r)    = safeGCD l r
+processBinary (POW l r)    = safePow l r
+processBinary (BINLOG l r) = safeLog l r
+
+safeSqrt :: Double -> Double
+safeSqrt a = 0 --fixme
+
+safeDiv :: Double -> Double -> Double
+safeDiv l r = 0 --fixme
+
+safeGCD :: Double -> Double -> Double
+safeGCD l r = 0 --fixme
+
+safePow :: Double -> Double -> Double
+safePow l r = 0 --fixme
+
+safeLog :: Double -> Double -> Double
+safeLog l r = logBase l r
