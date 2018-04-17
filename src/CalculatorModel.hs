@@ -19,4 +19,5 @@ data BinaryOperation = Double `ADD` Double
 
 data Operation = Binary BinaryOperation
                | Unary UnaryOperation
+               | Constant Double
                deriving(Show)

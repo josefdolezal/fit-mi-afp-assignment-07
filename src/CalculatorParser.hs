@@ -1,18 +1,19 @@
-module CalculatorParser (parseOperation) where
+module CalculatorParser (parseOperation, operation) where
 
 import Text.ParserCombinators.Parsec
 
 import CalculatorModel
 
 parseOperation :: String -> Either String Operation
-parseOperation s = case (parse operation "Error" s) of
+parseOperation s = case (parse (operation <* eof) "Error" s) of
     Left _ -> Left "Error"
     Right a -> Right a
 
 operation :: GenParser Char st Operation
 operation = try
     (Binary <$> binaryOperation) <|>
-    (Unary <$> unaryOperation)
+    (Unary <$> unaryOperation) <|>
+    (Constant <$> operand)
 
 unaryOperation :: GenParser Char st UnaryOperation
 unaryOperation = try

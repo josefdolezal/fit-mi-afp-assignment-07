@@ -26,8 +26,9 @@ calculate "" = Left e12
 calculate i = parseOperation i >>= process
 
 process :: Operation -> Calculation
-process (Unary u)  = processUnary u
-process (Binary b) = processBinary b
+process (Unary u)    = processUnary u
+process (Binary b)   = processBinary b
+process (Constant c) = Right c
 
 processUnary :: UnaryOperation -> Calculation
 processUnary (SQRT a) = safeSqrt a
