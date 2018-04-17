@@ -64,7 +64,7 @@ spec = describe "data type SortedList" $ do
           property prop_NeutralInt
         it "is instance of Functor (fmap, <$>)" $ do
           fmap (*2) list1 `shouldBe` fromList (map (*2) [1..5])
-          fmap (1-) list1 `shouldBe` fromList [(-4)..0]
+          fmap (1-) list1 `shouldBe` 0 :<$ ((-1) :<$ ((-2) :<$ ((-3) :<$ ((-4) :<$ Nil))))
           const 0 <$> list1 `shouldBe` fromList (replicate 5 0)
         it "is instance of Functor (fmap has identity)" $
           property prop_FmapIdInt
@@ -73,15 +73,14 @@ spec = describe "data type SortedList" $ do
         it "is instance of Applicative (pure, <*>)" $ do
           pure 5 `shouldBe` fromList [5] -- cannot test function equality
           pure (*2) <*> list1 `shouldBe` fromList (map (*2) [1..5])
-          pure (1-) <*> list1 `shouldBe` fromList [(-4)..0]
-          ((1-) :<$ pure (*3)) <*> list1 `shouldBe` fromList ([(-4)..0] ++ map (3*) [1..5])
+          pure (1-) <*> list1 `shouldBe` 0 :<$ ((-1) :<$ ((-2) :<$ ((-3) :<$ ((-4) :<$ Nil))))
+          ((1-) :<$ pure (*3)) <*> list1 `shouldBe` 0 :<$ ((-1) :<$ ((-2) :<$ ((-3) :<$ ((-4) :<$ (3 :<$ (6 :<$ (9 :<$ (12 :<$ (15 :<$ Nil)))))))))
         it "is instance of Monad (>>)" $ do
           (empty >> empty) `shouldBe` empty
           (empty >> list1) `shouldBe` empty
           (list3 >> empty) `shouldBe` empty
-          (list3 >> list1) `shouldBe` list1
-          (badlist >> list1) `shouldBe` empty
+          -- repeats like normal [] monad
+          (list2 >> list1) `shouldBe` 1 :<$ (2 :<$ (3 :<$ (4 :<$ (5 :<$ (1 :<$ (2 :<$ (3 :<$ (4 :<$ (5 :<$ Nil)))))))))
         it "is instance of Monad (>>=)" $ do
           (empty >>= (\x -> return (x*x))) `shouldBe` empty
-          (badlist >>= (\x -> return (x*x))) `shouldBe` empty
           (list1 >>= (\x -> return (x*x))) `shouldBe` fromList (map (^2) [1..5])
