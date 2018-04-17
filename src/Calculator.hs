@@ -57,9 +57,10 @@ safeDiv l r
 
 safeGCD :: Double -> Double -> Calculation
 safeGCD l r
-    | l < 0 || r < 0 = Left e6
-    | l > r          = Right $ fromIntegral $ gcd (round l) (round r)
-    | otherwise      = Left e5
+    | invalidGCDOperands = Left e6
+    | l > r              = Right $ fromIntegral $ gcd (round l) (round r)
+    | otherwise          = Left e5
+        where invalidGCDOperands = l < 0 || r < 0 || (wasDecimal l) || (wasDecimal r)
 
 safePow :: Double -> Double -> Calculation
 safePow 0 0 = Left e7
@@ -70,3 +71,8 @@ safeLog 0 0 = Left e8
 safeLog 0 _ = Left e9
 safeLog _ 0 = Left e10
 safeLog l r = Right $ logBase l r
+
+-- Not a really good solution, but everything is already double..
+wasDecimal :: Double -> Bool
+wasDecimal a = a - sanitized /= 0
+    where sanitized = fromIntegral . round $ a
