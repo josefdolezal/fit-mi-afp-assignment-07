@@ -1,6 +1,7 @@
 module CalculatorCLI (calculator) where
 
 import CalculatorModel
+import Calculator
 
 -- | Help for you and the users
 help :: IO ()
@@ -23,12 +24,20 @@ help = do
   putStrLn " PI (-PI)"
   putStrLn "Others:"
   putStrLn " ?"
+  putStrLn "Exit:"
+  putStrLn " Ctrl + D"
   putStrLn "-------------------------"
 
 -- | CLI for calculator
 calculator :: IO ()
 calculator = do
     putStrLn "Even more Basic Calculator (use '?' for help)"
-    -- TODO: implement it with some loop?!
-    help
-    putStrLn "Bye!"
+    mapM_ cli . lines =<< getContents
+
+cli :: String -> IO ()
+cli "?" = help
+cli r   = printResult $ calculate r
+
+printResult :: Either String Double -> IO ()
+printResult (Left e)  = putStrLn $ "Error: " ++ e
+printResult (Right v) = putStrLn $ "Result: " ++ (show v)
