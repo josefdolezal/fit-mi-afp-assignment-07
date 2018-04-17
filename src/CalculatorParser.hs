@@ -6,14 +6,14 @@ import CalculatorModel
 
 operation :: GenParser Char st Operation
 operation = try
-    (Unary <$> unaryOperation) <|>
-    (Binary <$> binaryOperation)
+    (Binary <$> binaryOperation) <|>
+    (Unary <$> unaryOperation)
 
 unaryOperation :: GenParser Char st UnaryOperation
 unaryOperation = try
     (unop "SQRT" SQRT) <|>
-    (unop "LOG" ULOG) <|>
-    (unop "SIN" SIN) <|>
+    (unop "LOG" ULOG)  <|>
+    (unop "SIN" SIN)   <|>
     (unop "COS" COS)
 
 binaryOperation :: GenParser Char st BinaryOperation
@@ -30,14 +30,13 @@ unop :: String -> (Double -> UnaryOperation) -> GenParser Char st UnaryOperation
 unop op f = do
     string op
     spaces
-    suffOp <- operand
-    return $ f suffOp
+    f <$> operand
 
 binop :: String -> (Double -> Double -> BinaryOperation) -> GenParser Char st BinaryOperation
 binop op f = do
-    leftOp <- operand
-    spaces
     string op
+    spaces
+    leftOp <- operand
     spaces
     rightOp <- operand
     return $ f leftOp rightOp
@@ -53,7 +52,8 @@ expr = try
     number
 
 neg :: GenParser Char st Double -> GenParser Char st Double
-neg expr = do { ex <- expr; char '-'; return $ (-1) * ex }
+neg pars = parens inner
+    where inner = do { char '-'; (*(-1)) <$> pars }
 
 parens :: GenParser Char st a -> GenParser Char st a
 parens = between (char '(') (char ')')
