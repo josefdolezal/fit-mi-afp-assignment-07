@@ -20,7 +20,7 @@ description:         Please see the README on Github at <https://github.com/MI-A
 
 dependencies:
 - base >= 4.7 && < 5
-- turtle
+- parsec
 
 library:
   source-dirs: src

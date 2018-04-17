@@ -1,11 +1,6 @@
 module CalculatorCLI (calculator) where
 
-import Turtle
-
 import CalculatorModel
-
-operand :: Parser Operation
-operand = 
 
 -- | Help for you and the users
 help :: IO ()

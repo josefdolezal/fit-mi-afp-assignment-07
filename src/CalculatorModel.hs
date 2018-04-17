@@ -2,17 +2,21 @@ module CalculatorModel where
 
 type Calculation = Either String Double
 
-data UnaryOperation = SQRT Integer
-                    | SIN Integer
-                    | COS Integer
-                    -- | LOG Integer -- Interpreted as binary
+data UnaryOperation = SQRT Double
+                    | SIN Double
+                    | COS Double
+                    | ULOG Double
+                    deriving(Show)
 
-data BinaryOperation = Integer `ADD` Integer
-                     | Integer `SUB` Integer
-                     | Integer `MUL` Integer
-                     | Integer `DIV` Integer
-                     | Integer `GCD` Integer
-                     | Integer `POW` Integer
-                     | Integer `LOG` Integer
+data BinaryOperation = Double `ADD` Double
+                     | Double `SUB` Double
+                     | Double `MUL` Double
+                     | Double `DIV` Double
+                     | Double `GCD` Double
+                     | Double `POW` Double
+                     | Double `BINLOG` Double
+                     deriving(Show)
 
-data Operation = BinaryOperation | UnaryOperation | Integer
+data Operation = Binary BinaryOperation
+               | Unary UnaryOperation
+               deriving(Show)
