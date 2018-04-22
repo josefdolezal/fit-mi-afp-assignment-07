@@ -6,7 +6,7 @@ import CalculatorModel
 
 parseOperation :: String -> Either String Operation
 parseOperation s = case (parse (operation <* eof) "Error" s) of
-    Left _ -> Left "Error"
+    Left e  -> Left $ show e
     Right a -> Right a
 
 operation :: GenParser Char st Operation
@@ -42,9 +42,9 @@ binop :: String -> (Double -> Double -> BinaryOperation) -> GenParser Char st Bi
 binop op f = do
     string op
     spaces
-    leftOp <- operand
+    leftOp <- operand <?> (e3 0 2)
     spaces
-    rightOp <- operand
+    rightOp <- operand <?> (e3 1 2)
     return $ f leftOp rightOp
 
 operand :: GenParser Char st Double
