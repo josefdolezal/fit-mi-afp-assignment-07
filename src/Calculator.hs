@@ -6,10 +6,6 @@ import CalculatorParser
 -- Use monads, and functors and/or applicative to make the code simple!
 
 -- Devise own operations with errors, here are msgs for you
-e0 x = "Unknown operation: " ++ show x
-e1 x = "Unknown constant: " ++ show x
-e2 x = "Not a number:" ++ show x
-e3 g r = "Missing operand/s (" ++ show g ++ " given, " ++ show r ++ " required)"
 e4   = "DIV - Y cannot be 0"
 e5   = "GCD - X must be greater or equal to Y"
 e6   = "GCD - X and Y must be natural numbers"

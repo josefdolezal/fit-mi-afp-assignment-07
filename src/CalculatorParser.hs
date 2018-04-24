@@ -4,6 +4,11 @@ import Text.ParserCombinators.Parsec
 
 import CalculatorModel
 
+e0 x = "Unknown operation: " ++ show x
+e1 x = "Unknown constant: " ++ show x
+e2 x = "Not a number:" ++ show x
+e3 g r = "Missing operand/s (" ++ show g ++ " given, " ++ show r ++ " required)"
+
 parseOperation :: String -> Either String Operation
 parseOperation s = case (parse (operation <* eof) "Error" s) of
     Left e  -> Left $ show e
