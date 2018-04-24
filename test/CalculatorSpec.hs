@@ -34,7 +34,7 @@ spec = describe "calculate" $ do
             calculate "SQRT 145" `shouldBe` Right (sqrt 145)
             calculate "LOG 100" `shouldBe` Right 2
             calculate "LOG 1" `shouldBe` Right 0
-            calculate "SIN 0" `shouldBe` Right 1
+            calculate "SIN 0" `shouldBe` Right 0
             calculate "SIN 10" `shouldBe` Right (sin 10)
             calculate "SIN -10" `shouldBe` Right (sin (-10))
             calculate "COS 0" `shouldBe` Right 1
@@ -46,7 +46,7 @@ spec = describe "calculate" $ do
           it "can use constants as arguments" $ do
             calculate "ADD PI -PI" `shouldBe` Right 0
             calculate "DIV -PI PI" `shouldBe` Right (-1)
-            calculate "SIN PI" `shouldBe` Right 0
+            calculate "SIN PI" `shouldBe` Right (sin pi)
             calculate "COS -PI" `shouldBe` Right (-1)
         context "with some typos and basic erros" $ do
           it "detects no input" $
@@ -54,7 +54,7 @@ spec = describe "calculate" $ do
           it "detects unknown instructions" $ do
             calculate "PIE 5" `shouldBe` Left "Unknown operation: PIE"
             calculate "KOS PI" `shouldBe` Left "Unknown operation: KOS"
-            calculate "LG 0" `shouldBe` Left "Unknown operation: KOS"
+            calculate "LG 0" `shouldBe` Left "Unknown operation: LG"
           it "detects unknown constants" $ do
             calculate "PIE" `shouldBe` Left "Unknown constant: PIE"
             calculate "SIN PIE" `shouldBe` Left "Unknown constant: PIE"
